@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && npm run serve",
+    "start": "npm run build && npm run server",
     "build": "npx tsc",
-    "serve": "node --require dotenv/config dist/app.js",
+    "server": "node --require dotenv/config dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
