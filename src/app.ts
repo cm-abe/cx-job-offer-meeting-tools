@@ -1,5 +1,6 @@
 import {App} from "@slack/bolt";
 
+
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET
@@ -16,11 +17,20 @@ app.event("app_mention", async ({event, context}) => {
             is_private: true
         });
 
-        // TODO invite users for private channel
         // get id from create channel result
-        // -> has property?
-        // -> is string?
-        // call api
+        let createdChannelId = "";
+
+        if(hasProperty(resultCreate.channel, "id")) {
+            if(typeof resultCreate.channel.id === "string") {
+                createdChannelId = resultCreate.channel.id;
+            }
+        }
+
+        // invite users for private channel
+        const resultInviteUsers = await app.client.conversations.invite({
+            channel: createdChannelId,
+            users: ""
+        })
 
         // TODO set topic
         // TODO send message for es div
