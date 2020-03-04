@@ -6,9 +6,24 @@ const app = new App({
 });
 
 // Listnes to mentions from any user to bot user
-app.event("app_mention", ({event, context}) => {
+app.event("app_mention", async ({event, context}) => {
     try {
-        // do something
+        // TODO validation
+
+        // create private channel
+        const resultCreate = await app.client.conversations.create({
+            name: "cx-abe-bot-private-channel-test",
+            is_private: true
+        });
+
+        // TODO invite users for private channel
+        // get id from create channel result
+        // -> has property?
+        // -> is string?
+        // call api
+
+        // TODO set topic
+        // TODO send message for es div
     } catch (error) {
         console.error(error);
     }
