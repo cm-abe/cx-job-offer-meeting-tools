@@ -5,7 +5,16 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-// Listens to incoming messages that contain "hello"
+// Listnes to mentions from any user to bot user
+app.event("app_mention", ({event, context}) => {
+    try {
+        // do something
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// Listens to incoming messages that contain "hello" -> this is sample event! must remove when production deploy.
 app.message("hello", ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     say(`Hey threre <@${message.user}>`);
