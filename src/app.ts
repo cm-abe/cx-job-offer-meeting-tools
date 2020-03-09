@@ -1,5 +1,5 @@
 import {App} from "@slack/bolt";
-
+import * as helpers from "./helpers";
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
@@ -10,31 +10,39 @@ const app = new App({
 app.event("app_mention", async ({event, context}) => {
     try {
         // TODO validation
+        console.log("hello");
 
         // create private channel
         const resultCreate = await app.client.conversations.create({
-            name: "cx-abe-bot-private-channel-test",
+            token: process.env.SLACK_BOT_TOKEN,
+            name: "cx-abe-bot-private-channel-test-retry",
             is_private: true
         });
+
+        console.log("channel created");
 
         // get id from create channel result
         let createdChannelId = "";
 
-        if(hasProperty(resultCreate.channel, "id")) {
+        if(helpers.hasProperty(resultCreate.channel, "id")) {
             if(typeof resultCreate.channel.id === "string") {
                 createdChannelId = resultCreate.channel.id;
             }
         }
 
+        console.log(createdChannelId);
+
         // invite users for private channel
         const resultInviteUsers = await app.client.conversations.invite({
+            token: process.env.SLACK_BOT_TOKEN,
             channel: createdChannelId,
-            users: ""
-        })
+            users: process.env.TEST_USER_ID
+        });
 
         // TODO set topic
         // TODO send message for es div
     } catch (error) {
+        // console.log(error.data.response_metadata.acceptedScopes);
         console.error(error);
     }
 });
