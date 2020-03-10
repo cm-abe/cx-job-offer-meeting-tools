@@ -53,6 +53,17 @@ app.message("hello", ({ message, say }) => {
     say(`Hey threre <@${message.user}>`);
 });
 
+// This is a sample for getting user info
+app.message("ユーザをあれする", ({ message, say }) => {
+    // メンションついてるメッセージの確認 -> メンションの内容がどうなってるか -> Idに展開される
+    // user.info
+    // find...
+    console.log(message);
+    console.log(helpers.getMentionsUser(message.text));
+
+    say(`Received!`);
+});
+
 (async () => {
     // Start your app
     await app.start(process.env.PORT || 3000);
