@@ -12,9 +12,17 @@ app.event("app_mention", async ({event, context}) => {
         // TODO validation
         console.log("hello");
 
+        // extract mentioned users from message text
+        const mentionedUsers = Array.from(new Set(
+            helpers.getMentionsUser(event.text)
+                   .map(mention => mention.substr(2,9))
+                   .filter(userId => userId !== context.botUserId)));
+
+        console.log(mentionedUsers);
+
         // create private channel
         const resultCreate = await app.client.conversations.create({
-            token: process.env.SLACK_BOT_TOKEN,
+            token: context.botToken,
             name: "cx-abe-bot-private-channel-test-retry",
             is_private: true
         });
@@ -34,9 +42,9 @@ app.event("app_mention", async ({event, context}) => {
 
         // invite users for private channel
         const resultInviteUsers = await app.client.conversations.invite({
-            token: process.env.SLACK_BOT_TOKEN,
+            token: context.botToken,
             channel: createdChannelId,
-            users: process.env.TEST_USER_ID
+            users: mentionedUsers.join()
         });
 
         // TODO set topic
@@ -51,17 +59,6 @@ app.event("app_mention", async ({event, context}) => {
 app.message("hello", ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     say(`Hey threre <@${message.user}>`);
-});
-
-// This is a sample for getting user info
-app.message("ユーザをあれする", ({ message, say }) => {
-    // メンションついてるメッセージの確認 -> メンションの内容がどうなってるか -> Idに展開される
-    // user.info
-    // find...
-    console.log(message);
-    console.log(helpers.getMentionsUser(message.text));
-
-    say(`Received!`);
 });
 
 (async () => {
