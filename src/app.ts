@@ -1,5 +1,6 @@
 import {App} from "@slack/bolt";
 import * as helpers from "./helpers";
+import informationForm from "./forms/job_offer_meeting_infomation_form.json";
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
@@ -59,6 +60,13 @@ app.event("app_mention", async ({event, context}) => {
 app.message("hello", ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     say(`Hey threre <@${message.user}>`);
+});
+
+// TODO make interaction
+// create input form
+// and validation
+app.message("フォームをお願い", ({ message, say }) => {
+    console.log(informationForm);
 });
 
 (async () => {

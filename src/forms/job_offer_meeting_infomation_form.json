@@ -1,0 +1,98 @@
+{
+	"type": "modal",
+	"title": {
+		"type": "plain_text",
+		"text": "二次面接情報入力",
+		"emoji": true
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Submit",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": "二次面接の情報を入力してください。",
+				"emoji": true
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "input",
+            "block_id": "applicant_name",
+			"element": {
+				"type": "plain_text_input"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "お名前",
+				"emoji": true
+			}
+		},
+		{
+			"type": "input",
+            "block_id": "applicant_name_kana",
+			"element": {
+				"type": "plain_text_input"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "お名前(カナ)",
+				"emoji": true
+			}
+		},
+		{
+			"type": "input",
+            "block_id": "offer_team_managers",
+			"element": {
+				"type": "multi_users_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "対象チームのマネージャを入力",
+					"emoji": true
+				}
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "対象チーム",
+				"emoji": true
+			}
+		},
+		{
+			"type": "input",
+            "block_id": "job_type",
+			"element": {
+				"type": "static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "職種を選択",
+					"emoji": true
+				},
+                "options" : [
+                    {
+                        "text": {
+            				"type": "plain_text",
+            				"text": "*this is plain_text text*"
+          				},
+          				"value": "value-0"
+                    }
+                ]
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "応募職種",
+				"emoji": true
+			}
+		}
+	]
+}
