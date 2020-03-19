@@ -1,4 +1,5 @@
 import {App} from "@slack/bolt";
+import {View} from "@slack/types";
 import * as helpers from "./helpers";
 import meetingInformationForm from "./forms/meeting_infomation.json";
 
@@ -62,11 +63,22 @@ app.message("hello", ({ message, say }) => {
     say(`Hey threre <@${message.user}>`);
 });
 
-// TODO make interaction
+// TODO make interaction -> trigger
 // create input form
 // and validation
-app.message("フォームをお願い", ({ message, say }) => {
-    console.log(meetingInformationForm);
+app.command("/二次面接準備", ({ ack, body, context }) => {
+    ack();
+
+    try {
+        const result = app.client.views.open({
+            token: context.botToken,
+            trigger_id: body.trigger_id,
+            view: meetingInformationForm as View
+        });
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 (async () => {
