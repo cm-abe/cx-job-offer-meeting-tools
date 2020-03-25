@@ -1,5 +1,6 @@
 {
 	"type": "modal",
+	"callback_id": "meeting_information",
 	"title": {
 		"type": "plain_text",
 		"text": "二次面接情報入力",

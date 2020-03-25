@@ -63,9 +63,6 @@ app.message("hello", ({ message, say }) => {
     say(`Hey threre <@${message.user}>`);
 });
 
-// TODO make interaction -> trigger
-// create input form
-// and validation
 app.command("/二次面接準備", ({ ack, body, context }) => {
     ack();
 
@@ -80,6 +77,16 @@ app.command("/二次面接準備", ({ ack, body, context }) => {
         console.error(error);
     }
 });
+
+// receive and validation
+app.view("meeting_information", async({ ack, body, view, context }) => {
+    ack();
+
+    // read:view -> state -> values
+    // TODO validation(other then required input)
+    console.log(view);
+});
+
 
 (async () => {
     // Start your app
