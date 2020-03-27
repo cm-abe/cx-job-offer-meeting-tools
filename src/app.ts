@@ -11,9 +11,6 @@ const app = new App({
 // Listnes to mentions from any user to bot user
 app.event("app_mention", async ({event, context}) => {
     try {
-        // TODO validation
-        console.log("hello");
-
         // extract mentioned users from message text
         const mentionedUsers = Array.from(new Set(
             helpers.getMentionsUser(event.text)
@@ -82,9 +79,17 @@ app.command("/二次面接準備", ({ ack, body, context }) => {
 app.view("meeting_information", async({ ack, body, view, context }) => {
     ack();
 
-    // read:view -> state -> values
-    // TODO validation(other then required input)
-    console.log(view);
+    const state = view['state'] as FormStates;
+
+    console.log(state.values.applicant_name.entered_applicant_name.value);
+    console.log(state.values.applicant_name_kana.entered_applicant_name_kana.value);
+    console.log(state.values.job_type.selected_job_type.selected_option);
+    console.log(state.values.offer_team_managers.selected_offer_team_manager.selected_users);
+
+    const regInvalidChannelNamePattern = /[  ,.、。]/g
+    console.log(state.values.applicant_name_kana.entered_applicant_name_kana.value.match(regInvalidChannelNamePattern));
+    // [  ,.、。]
+    // ack -> response_action: error, block: applicant_name_kana, message
 });
 
 

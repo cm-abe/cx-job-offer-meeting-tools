@@ -32,7 +32,8 @@
 			"type": "input",
             "block_id": "applicant_name",
 			"element": {
-				"type": "plain_text_input"
+				"type": "plain_text_input",
+				"action_id": "entered_applicant_name"
 			},
 			"label": {
 				"type": "plain_text",
@@ -44,7 +45,8 @@
 			"type": "input",
             "block_id": "applicant_name_kana",
 			"element": {
-				"type": "plain_text_input"
+				"type": "plain_text_input",
+				"action_id": "entered_applicant_name_kana"
 			},
 			"label": {
 				"type": "plain_text",
@@ -61,7 +63,8 @@
 					"type": "plain_text",
 					"text": "対象チームのマネージャを入力",
 					"emoji": true
-				}
+				},
+				"action_id": "selected_offer_team_manager"
 			},
 			"label": {
 				"type": "plain_text",
@@ -87,7 +90,8 @@
           				},
           				"value": "value-0"
                     }
-                ]
+				],
+				"action_id": "selected_job_type"
 			},
 			"label": {
 				"type": "plain_text",
