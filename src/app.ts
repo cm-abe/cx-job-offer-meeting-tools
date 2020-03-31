@@ -77,8 +77,6 @@ app.command("/二次面接準備", ({ ack, body, context }) => {
 
 // receive and validation
 app.view("meeting_information", async({ ack, body, view, context }) => {
-    ack();
-
     const state = view['state'] as FormStates;
 
     console.log(state.values.applicant_name.entered_applicant_name.value);
@@ -86,10 +84,19 @@ app.view("meeting_information", async({ ack, body, view, context }) => {
     console.log(state.values.job_type.selected_job_type.selected_option);
     console.log(state.values.offer_team_managers.selected_offer_team_manager.selected_users);
 
-    const regInvalidChannelNamePattern = /[  ,.、。]/g
-    console.log(state.values.applicant_name_kana.entered_applicant_name_kana.value.match(regInvalidChannelNamePattern));
-    // [  ,.、。]
-    // ack -> response_action: error, block: applicant_name_kana, message
+    const regInvalidChannelNamePattern = /[ 　,\.、。]/g
+    if(regInvalidChannelNamePattern.test(state.values.applicant_name_kana.entered_applicant_name_kana.value)) {
+        console.log("validation error");
+        ack({
+            "response_action": "errors",
+            "errors": {
+              "applicant_name_kana": "半角/全角を含む空白や句読点は入力しないでください"
+            }
+          } as any);
+    } else {
+        console.log("acknowledge form");
+        ack();
+    }
 });
 
 
