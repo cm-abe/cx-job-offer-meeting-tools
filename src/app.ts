@@ -8,52 +8,6 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-// Listnes to mentions from any user to bot user
-app.event("app_mention", async ({event, context}) => {
-    try {
-        // extract mentioned users from message text
-        const mentionedUsers = Array.from(new Set(
-            helpers.getMentionsUser(event.text)
-                   .map(mention => mention.substr(2,9))
-                   .filter(userId => userId !== context.botUserId)));
-
-        console.log(mentionedUsers);
-
-        // create private channel
-        const resultCreate = await app.client.conversations.create({
-            token: context.botToken,
-            name: "cx-abe-bot-private-channel-test-retry",
-            is_private: true
-        });
-
-        console.log("channel created");
-
-        // get id from create channel result
-        let createdChannelId = "";
-
-        if(helpers.hasProperty(resultCreate.channel, "id")) {
-            if(typeof resultCreate.channel.id === "string") {
-                createdChannelId = resultCreate.channel.id;
-            }
-        }
-
-        console.log(createdChannelId);
-
-        // invite users for private channel
-        const resultInviteUsers = await app.client.conversations.invite({
-            token: context.botToken,
-            channel: createdChannelId,
-            users: mentionedUsers.join()
-        });
-
-        // TODO set topic
-        // TODO send message for es div
-    } catch (error) {
-        // console.log(error.data.response_metadata.acceptedScopes);
-        console.error(error);
-    }
-});
-
 // Listens to incoming messages that contain "hello" -> this is sample event! must remove when production deploy.
 app.message("hello", ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
@@ -79,13 +33,7 @@ app.command("/二次面接準備", ({ ack, body, context }) => {
 app.view("meeting_information", async({ ack, body, view, context }) => {
     const state = view['state'] as FormStates;
 
-    console.log(state.values.applicant_name.entered_applicant_name.value);
-    console.log(state.values.applicant_name_kana.entered_applicant_name_kana.value);
-    console.log(state.values.job_type.selected_job_type.selected_option);
-    console.log(state.values.offer_team_managers.selected_offer_team_manager.selected_users);
-
-    const regInvalidChannelNamePattern = /[ 　,\.、。]/g
-    if(regInvalidChannelNamePattern.test(state.values.applicant_name_kana.entered_applicant_name_kana.value)) {
+    if(helpers.checkJobOfferInformation(state)) {
         console.log("validation error");
         ack({
             "response_action": "errors",
@@ -96,6 +44,37 @@ app.view("meeting_information", async({ ack, body, view, context }) => {
     } else {
         console.log("acknowledge form");
         ack();
+
+        try {
+            // create private channel
+            const resultCreate = await app.client.conversations.create({
+                token: context.botToken,
+                name: helpers.generateJobOfferChannel(state),
+                is_private: true
+            });
+
+            console.log("channel created");
+
+            // get id from create channel result
+            let createdChannelId = "";
+
+            if(helpers.hasProperty(resultCreate.channel, "id")) {
+                if(typeof resultCreate.channel.id === "string") {
+                    createdChannelId = resultCreate.channel.id;
+                }
+            }
+
+            console.log(createdChannelId);
+
+            // invite users for private channel
+            const resultInviteUsers = await app.client.conversations.invite({
+                token: context.botToken,
+                channel: createdChannelId,
+                users: state.values.offer_team_managers.selected_offer_team_manager.selected_users.join()
+            });
+        } catch(error) {
+            console.error(error);
+        }
     }
 });
 

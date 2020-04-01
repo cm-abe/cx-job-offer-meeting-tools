@@ -8,4 +8,14 @@ function getMentionsUser(text: string): RegExpMatchArray {
     return text.match(regIdPattern);
 }
 
-export {hasProperty, getMentionsUser};
+function checkJobOfferInformation(formData: FormStates): boolean {
+    const regInvalidChannelNamePattern = /[ 　,\.、。]/g;
+
+    return regInvalidChannelNamePattern.test(formData.values.applicant_name_kana.entered_applicant_name_kana.value);
+}
+
+function generateJobOfferChannel(formData: FormStates):string {
+    return `rec-cx-@{formData.values.job_type.selected_option.value}-@{formData.values.applicant_name_kana.entered_applicant_name_kana.value}様`;
+}
+
+export {hasProperty, getMentionsUser, checkJobOfferInformation, generateJobOfferChannel};
