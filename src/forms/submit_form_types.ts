@@ -8,10 +8,16 @@ type UserSelection = {
     selected_users: string[]
 };
 
+type PullDownText = {
+    type: string,
+    text: string,
+    emoji: boolean
+}
+
 type PullDownSelection = {
     type: string,
     selected_option: {
-        type: object,
+        text: PullDownText,
         value: string
     }
 };

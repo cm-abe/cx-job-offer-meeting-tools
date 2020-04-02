@@ -15,7 +15,7 @@ function checkJobOfferInformation(formData: FormStates): boolean {
 }
 
 function generateJobOfferChannel(formData: FormStates):string {
-    return `rec-cx-@{formData.values.job_type.selected_option.value}-@{formData.values.applicant_name_kana.entered_applicant_name_kana.value}様`;
+    return `rec-cx-${formData.values.job_type.selected_job_type.selected_option.text.text}-${formData.values.applicant_name_kana.entered_applicant_name_kana.value}様`;
 }
 
 export {hasProperty, getMentionsUser, checkJobOfferInformation, generateJobOfferChannel};

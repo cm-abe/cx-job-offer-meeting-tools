@@ -47,13 +47,12 @@ app.view("meeting_information", async({ ack, body, view, context }) => {
 
         try {
             // create private channel
+            console.log(helpers.generateJobOfferChannel(state));
             const resultCreate = await app.client.conversations.create({
                 token: context.botToken,
                 name: helpers.generateJobOfferChannel(state),
                 is_private: true
             });
-
-            console.log("channel created");
 
             // get id from create channel result
             let createdChannelId = "";
@@ -64,7 +63,7 @@ app.view("meeting_information", async({ ack, body, view, context }) => {
                 }
             }
 
-            console.log(createdChannelId);
+            console.log(`channel created. id is ${createdChannelId}`);
 
             // invite users for private channel
             const resultInviteUsers = await app.client.conversations.invite({
