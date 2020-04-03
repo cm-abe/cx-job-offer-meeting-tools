@@ -88,49 +88,49 @@
             				"type": "plain_text",
             				"text": "サーバーサイドエンジニア"
           				},
-          				"value": "serverside-engineer"
+          				"value": "サーバーサイドエンジニア"
 					},
 					{
 						"text": {
 							"type": "plain_text",
 							"text": "Androidエンジニア"
 						},
-						"value": "android-engineer"
+						"value": "androidエンジニア"
 					},
 					{
 						"text": {
 							"type": "plain_text",
 							"text": "iOSエンジニア"
 						},
-						"value": "ios-engineer"
+						"value": "iosエンジニア"
 					},
 					{
 						"text": {
 							"type": "plain_text",
 							"text": "Webフロントエンジニア"
 						},
-						"value": "web-frontend-engineer"
+						"value": "webフロントエンジニア"
 					},
 					{
 						"text": {
 							"type": "plain_text",
 							"text": "IoTバックエンドエンジニア"
 						},
-						"value": "iot-backend-engineer"
+						"value": "iotバックエンドエンジニア"
 					},
 					{
 						"text": {
 							"type": "plain_text",
 							"text": "DevIOカフェエンジニア"
 						},
-						"value": "devio-cafe-engineer"
+						"value": "カフェエンジニア"
 					},
 					{
 						"text": {
 							"type": "plain_text",
 							"text": "プロダクトマネージャー"
 						},
-						"value": "product-manager"
+						"value": "プロダクトマネージャ"
 					}
 				],
 				"action_id": "selected_job_type"
