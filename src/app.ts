@@ -2,6 +2,7 @@ import {App} from "@slack/bolt";
 import {View} from "@slack/types";
 import * as helpers from "./helpers";
 import meetingInformationForm from "./forms/meeting_infomation.json";
+import {JobOfferMeeting} from "./domain/job_offer_meeting";
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
@@ -31,49 +32,41 @@ app.command("/二次面接準備", ({ ack, body, context }) => {
 
 // receive and validation
 app.view("meeting_information", async({ ack, body, view, context }) => {
-    const state = view['state'] as FormStates;
+    const jobOfferMeeting = new JobOfferMeeting(view['state'] as FormStates);
 
-    if(helpers.checkJobOfferInformation(state)) {
-        console.log("validation error");
-        ack({
-            "response_action": "errors",
-            "errors": {
-              "applicant_name_kana": "半角/全角を含む空白や句読点は入力しないでください"
+    // validate and error logic into try block
+    ack(jobOfferMeeting.validateForm());
+
+    console.log("acknowledge form");
+
+    try {
+        // create private channel
+        console.log(jobOfferMeeting.getJobOfferChannelName());
+        const resultCreate = await app.client.conversations.create({
+            token: context.botToken,
+            name: jobOfferMeeting.getJobOfferChannelName(),
+            is_private: true
+        });
+
+        // get id from create channel result
+        let createdChannelId = "";
+
+        if(helpers.hasProperty(resultCreate.channel, "id")) {
+            if(typeof resultCreate.channel.id === "string") {
+                createdChannelId = resultCreate.channel.id;
             }
-          } as any);
-    } else {
-        console.log("acknowledge form");
-        ack();
-
-        try {
-            // create private channel
-            console.log(helpers.generateJobOfferChannel(state));
-            const resultCreate = await app.client.conversations.create({
-                token: context.botToken,
-                name: helpers.generateJobOfferChannel(state),
-                is_private: true
-            });
-
-            // get id from create channel result
-            let createdChannelId = "";
-
-            if(helpers.hasProperty(resultCreate.channel, "id")) {
-                if(typeof resultCreate.channel.id === "string") {
-                    createdChannelId = resultCreate.channel.id;
-                }
-            }
-
-            console.log(`channel created. id is ${createdChannelId}`);
-
-            // invite users for private channel
-            const resultInviteUsers = await app.client.conversations.invite({
-                token: context.botToken,
-                channel: createdChannelId,
-                users: state.values.offer_team_managers.selected_offer_team_manager.selected_users.join()
-            });
-        } catch(error) {
-            console.error(error);
         }
+
+        console.log(`channel created. id is ${createdChannelId}`);
+
+        // invite users for private channel
+        const resultInviteUsers = await app.client.conversations.invite({
+            token: context.botToken,
+            channel: createdChannelId,
+            users: jobOfferMeeting.getManagers().join()
+        });
+    } catch(error) {
+        console.error(error);
     }
 });
 
