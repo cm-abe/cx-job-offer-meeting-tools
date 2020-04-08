@@ -63,7 +63,7 @@ app.view("meeting_information", async({ ack, body, view, context }) => {
         const resultInviteUsers = await app.client.conversations.invite({
             token: context.botToken,
             channel: createdChannelId,
-            users: jobOfferMeeting.getManagers().join()
+            users: jobOfferMeeting.getChannelUsers().join()
         });
     } catch(error) {
         console.error(error);

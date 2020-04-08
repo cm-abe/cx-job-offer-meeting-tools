@@ -33,6 +33,9 @@ type FormStates = {
         offer_team_managers: {
             selected_offer_team_manager: UserSelection
         },
+        es_div_pic: {
+            selected_es_div_pic: UserSelection
+        },
         job_type: {
             selected_job_type: PullDownSelection
         }

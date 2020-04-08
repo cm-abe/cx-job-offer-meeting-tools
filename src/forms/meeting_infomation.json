@@ -74,6 +74,16 @@
 		},
 		{
 			"type": "input",
+			"block_id": "es_div_pic",
+			"element": {
+				"type": "multi_users_select",
+				"text": "ES部の担当者を入力",
+				"emoji": true
+			},
+			"action_id": "selected_es_div_pic"
+		},
+		{
+			"type": "input",
             "block_id": "job_type",
 			"element": {
 				"type": "static_select",
