@@ -1,0 +1,11 @@
+{
+    "name": "cx-job-offer-meeting-tools-bundle-layer",
+    "version": "1.0.0",
+    "description": "CX div job offer meeting tools lambda layer bundle libralies",
+    "author": "Classmethod",
+    "license": "ISC",
+    "dependencies": {
+        "@slack/bolt": "^1.6.0",
+        "dotenv": "^8.2.0"
+    }
+}
