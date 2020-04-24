@@ -1,12 +1,17 @@
-import {App} from "@slack/bolt";
+import {App, ExpressReceiver} from "@slack/bolt";
 import {View} from "@slack/types";
 import * as helpers from "./helpers";
 import meetingInformationForm from "./forms/meeting_infomation.json";
 import {JobOfferMeeting} from "./domain/job_offer_meeting";
 
+const expressReceiver = new ExpressReceiver ({
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    endpoints: '/events'
+  });
+
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
-    signingSecret: process.env.SLACK_SIGNING_SECRET
+    receiver: expressReceiver
 });
 
 // Listens to incoming messages that contain "hello" -> this is sample event! must remove when production deploy.
@@ -70,10 +75,17 @@ app.view("meeting_information", async({ ack, body, view, context }) => {
     }
 });
 
+const awsServerlessExpress = require('aws-serverless-express');
+const server = awsServerlessExpress.createServer(expressReceiver.app);
 
-(async () => {
-    // Start your app
-    await app.start(process.env.PORT || 3000);
+export async function handler(event: any, context: any) {
+    awsServerlessExpress.proxy(server, event, context);
+}
 
-    console.log("⚡️ Bolt app is running!");
-})();
+// on local server
+// (async () => {
+//     // Start your app
+//     await app.start(process.env.PORT || 3000);
+
+//     console.log("⚡️ Bolt app is running!");
+// })();
