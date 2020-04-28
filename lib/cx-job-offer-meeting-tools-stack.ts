@@ -1,6 +1,7 @@
 import cdk = require('@aws-cdk/core');
 import {PreProcess} from "./cx-job-offer-meeting-tooks-preprocess";
 import * as lambda  from '@aws-cdk/aws-lambda';
+import * as apigateway from '@aws-cdk/aws-apigateway';
 import { Duration } from '@aws-cdk/core';
 
 export class CxJobOfferMeetingToolsStack extends cdk.Stack {
@@ -35,6 +36,11 @@ export class CxJobOfferMeetingToolsStack extends cdk.Stack {
             timeout: Duration.seconds(3),
             environment: lambdaSlackAppEnvironment,
             layers: [bundleLayer],
+        });
+
+        // api gateway
+        new apigateway.LambdaRestApi(this, 'jobOfferMeetingSlackAppApi', {
+            handler: lambdaFunction,
         });
     }
 }
