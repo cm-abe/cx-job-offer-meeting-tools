@@ -2,7 +2,7 @@ import cdk = require('@aws-cdk/core');
 import {PreProcess} from "./cx-job-offer-meeting-tooks-preprocess";
 import * as lambda  from '@aws-cdk/aws-lambda';
 import * as apigateway from '@aws-cdk/aws-apigateway';
-import { Duration } from '@aws-cdk/core';
+import * as iam from '@aws-cdk/aws-iam';
 
 export class CxJobOfferMeetingToolsStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -26,29 +26,37 @@ export class CxJobOfferMeetingToolsStack extends cdk.Stack {
         const bundleLayer = new lambda.LayerVersion(this, 'lambdaBundleLayer', {
             layerVersionName: 'cx-job-offer-meeting-tools-layer',
             code: new lambda.AssetCode(PreProcess.BUNDLE_LAYER_BASE_DIR),
-            compatibleRuntimes: [lambda.Runtime.NODEJS_10_X],
+            compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
         });
 
-        const lambdaFunction = new lambda.Function(this, 'jobOfferMeetingSlackApp', {
+        // create lambda function
+        const frontendLambdaFunction = new lambda.Function(this, 'jobOfferMeetingSlackAppFrontend', {
             code: lambda.Code.asset('dist/'),
             handler: `app.handler`,
-            runtime: lambda.Runtime.NODEJS_10_X,
-            timeout: Duration.seconds(3),
+            runtime: lambda.Runtime.NODEJS_12_X,
+            environment: lambdaSlackAppEnvironment,
+            layers: [bundleLayer],
+        });
+
+        frontendLambdaFunction.addToRolePolicy(new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ['lambda:InvokeFunction'],
+            resources: ['*']
+        }));
+
+        // create lambda function
+        new lambda.Function(this, 'jobOfferMeetingRequestForBuildMeetingChannelBackend', {
+            functionName: 'cx-job-offer-supporter-build-channel-operation-backend',
+            code: lambda.Code.asset('dist/'),
+            handler: `app.badkendToBuildMeetingChannel`,
+            runtime: lambda.Runtime.NODEJS_12_X,
             environment: lambdaSlackAppEnvironment,
             layers: [bundleLayer],
         });
 
         // api gateway
         new apigateway.LambdaRestApi(this, 'jobOfferMeetingSlackAppApi', {
-            handler: lambdaFunction,
+            handler: frontendLambdaFunction,
         });
     }
 }
-
-// Pre Process
-PreProcess.generateBundlePackage();
-
-// Main build process
-const app = new cdk.App();
-new CxJobOfferMeetingToolsStack(app, 'CxJobOfferMeetingTools');
-app.synth();
